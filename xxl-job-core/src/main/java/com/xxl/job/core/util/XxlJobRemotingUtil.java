@@ -10,15 +10,13 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.Map;
 
 /**
  * @author xuxueli 2018-11-25 00:55:31
  */
 public class XxlJobRemotingUtil {
-    private static Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(XxlJobRemotingUtil.class);
     public static final String XXL_JOB_ACCESS_TOKEN = "XXL-JOB-ACCESS-TOKEN";
 
 
@@ -33,12 +31,7 @@ public class XxlJobRemotingUtil {
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
-        connection.setHostnameVerifier(new HostnameVerifier() {
-            @Override
-            public boolean verify(String hostname, SSLSession session) {
-                return true;
-            }
-        });
+        connection.setHostnameVerifier((hostname, session) -> true);
     }
     private static final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
         @Override
@@ -46,10 +39,10 @@ public class XxlJobRemotingUtil {
             return new java.security.cert.X509Certificate[]{};
         }
         @Override
-        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        public void checkClientTrusted(X509Certificate[] chain, String authType) {
         }
         @Override
-        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+        public void checkServerTrusted(X509Certificate[] chain, String authType) {
         }
     }};
     // trust-https end
